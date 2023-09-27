@@ -5,8 +5,8 @@ import pandas as pd
 
 class CryStAl:
 
-    def __init__(self, function_to_optimize: object, problem_dimension: int, approach: str, lower_bound: float = np.PINF,
-                 upper_bound: float = np.NINF, num_crystals: int = 50, num_iterations: int = 20):
+    def __init__(self, function_to_optimize: object, problem_dimension: int, approach: str, lower_bound: float = -1e4,
+                 upper_bound: float = 1e4, num_crystals: int = 50, num_iterations: int = 20):
         self.__DIM = problem_dimension
         self.__APPROACH = approach.lower()
         self.__LB = lower_bound
