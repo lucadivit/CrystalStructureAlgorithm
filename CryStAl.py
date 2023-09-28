@@ -75,12 +75,15 @@ class CryStAl:
                 res = False
         return res
 
-    def start_crystals_construction(self, plot_history: bool = False) -> (float, np.array, pd.DataFrame):
+    def start_crystals_construction(self, save_history: bool = False, verbose: bool = False, task_name: str = "crystal") -> (float, np.array, pd.DataFrame):
         crystals = self.__create_crystals()
         fitnesses, best_fitness, best_index = self.__compute_fitnesses(crystals=crystals, eval_function=self.__FUNCTION)
         Cr_b = crystals[best_index]
         historical_loss = [best_fitness]
         historical_crystal = [list(Cr_b)]
+        if verbose:
+            print("-------------------")
+            print(f"Current Best Crystal Is {Cr_b} With Fitness {best_fitness}")
         for _ in range(0, self.__NUM_ITERATIONS):
             for crystal_idx in range(0, self.__NUM_CRYSTALS):
                 new_crystals = np.array([])
@@ -105,9 +108,12 @@ class CryStAl:
             Cr_b = crystals[best_index]
             historical_loss.append(best_fitness)
             historical_crystal.append(list(Cr_b))
+            if verbose:
+                print("-------------------")
+                print(f"Current Best Crystal Is {Cr_b} With Fitness {best_fitness}")
         hist_len = len(historical_loss)
         df = pd.DataFrame({"Function Value": historical_loss, "Iteration": list(range(0, hist_len)), "Best Crystal": historical_crystal})
-        if plot_history:
+        if save_history:
             sns.lineplot(x="Iteration", y="Function Value", data=df).set_title("Function Value Over Iterations")
-            plt.show()
+            plt.savefig(f"{task_name}.png")
         return best_fitness, Cr_b, df
